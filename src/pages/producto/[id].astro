@@ -65,22 +65,38 @@ if (!producto) {
           <h1 class="text-4xl md:text-5xl font-black text-white mb-8 leading-tight">{producto.nombre}</h1>
 
           <div class="bg-brand-dark border border-white/10 rounded-2xl p-6 mb-8 shadow-lg shadow-brand-cyan/5">
-            <div class="border-b border-white/10 pb-4 mb-4">
-              <div class="flex items-center gap-2 mb-1">
-                <span class="bg-brand-magenta text-white text-[10px] font-black uppercase px-2 py-0.5 rounded">15% OFF</span>
-                <span class="text-sm text-gray-300 font-bold uppercase tracking-wider">Efectivo o Transf.</span>
-              </div>
-              <div class="text-4xl font-black text-brand-cyan">
-                ${(producto.precio * 0.85).toFixed(2)}
-              </div>
-            </div>
-            <div>
-              <span class="text-sm text-gray-400 font-bold uppercase tracking-wider block mb-1">Precio de Lista (Tarjetas)</span>
-              <div class="flex items-center gap-3">
-                <span class="text-2xl font-bold text-gray-300">${producto.precio}</span>
-                <span class="text-sm font-bold text-brand-magenta">💳 3 cuotas s/interés de ${(producto.precio / 3).toFixed(2)}</span>
-              </div>
-            </div>
+            {producto.precioEfectivo ? (
+              <>
+                <div class="border-b border-white/10 pb-4 mb-4">
+                  <div class="flex items-center gap-2 mb-1">
+                    <span class="bg-brand-magenta text-white text-[10px] font-black uppercase px-2 py-0.5 rounded">OFERTA</span>
+                    <span class="text-sm text-gray-300 font-bold uppercase tracking-wider">Efectivo o Transf.</span>
+                  </div>
+                  <div class="text-4xl font-black text-brand-cyan">
+                    ${producto.precioEfectivo}
+                  </div>
+                </div>
+                <div>
+                  <span class="text-sm text-gray-400 font-bold uppercase tracking-wider block mb-1">Precio de Lista (Tarjetas)</span>
+                  <div class="flex items-center gap-3">
+                    <span class="text-2xl font-bold text-gray-300">${producto.precio}</span>
+                    <span class="text-sm font-bold text-brand-magenta">💳 3 cuotas s/interés de ${(producto.precio / 3).toFixed(2)}</span>
+                  </div>
+                </div>
+              </>
+            ) : (
+              <>
+                <div>
+                  <span class="text-sm text-gray-400 font-bold uppercase tracking-wider block mb-1">Precio Final</span>
+                  <div class="flex items-center gap-3">
+                    <span class="text-4xl font-black text-brand-cyan">${producto.precio}</span>
+                  </div>
+                  <div class="mt-2">
+                    <span class="text-sm font-bold text-brand-magenta">💳 3 cuotas s/interés de ${(producto.precio / 3).toFixed(2)}</span>
+                  </div>
+                </div>
+              </>
+            )}
           </div>
 
           <div class="mb-8">
