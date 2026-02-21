@@ -129,7 +129,7 @@
 
   btnWhatsApp.addEventListener('click', () => {
     const telefono = "3571602967"; // TU NÚMERO AQUÍ
-    let mensaje = "¡Hola Wembley Utilería! 👋\nQuiero hacer el siguiente pedido:\n\n";
+    let mensaje = "¡Hola Wembley Utilería! \nQuiero hacer el siguiente pedido:\n\n";
     let totalLista = 0;
 
     carrito.forEach(prod => {
@@ -139,8 +139,8 @@
 
     let totalEfectivo = totalLista * 0.75;
 
-    mensaje += `\n💳 *Total de Lista (3 cuotas): $${totalLista.toFixed(2)}*\n`;
-    mensaje += `💸 *Total Efectivo/Transferencia: $${totalEfectivo.toFixed(2)}*\n\n`;
+    mensaje += `\n*Total de Lista (3 cuotas): $${totalLista.toFixed(2)}*\n`;
+    mensaje += `*Total Efectivo/Transferencia: $${totalEfectivo.toFixed(2)}*\n\n`;
     mensaje += `¿Tienen stock disponible para avanzar con el pago?`;
 
     window.open(`https://wa.me/${telefono}?text=${encodeURIComponent(mensaje)}`, '_blank');
