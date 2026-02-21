@@ -47,7 +47,7 @@
           <p class="text-gray-400 text-sm font-bold uppercase tracking-wider mb-1">Total de Lista (Tarjetas)</p>
           <p id="totalListaHTML" class="text-2xl font-bold text-gray-300 line-through mb-4">$0</p>
 
-          <p class="text-brand-magenta text-sm font-bold uppercase tracking-wider mb-1">Total Efectivo/Transf. (-15%)</p>
+          <p class="text-brand-magenta text-sm font-bold uppercase tracking-wider mb-1">Total Efectivo/Transf. (-25%)</p>
           <p id="totalEfectivoHTML" class="text-4xl font-black text-brand-cyan">$0</p>
         </div>
 
@@ -107,7 +107,7 @@
           <div class="flex items-center justify-between sm:justify-end gap-6 w-full sm:w-auto">
             <div class="text-right">
               <p class="text-xs text-gray-400 line-through">$${prod.precio.toFixed(2)}</p>
-              <p class="font-black text-brand-cyan text-lg">$${(prod.precio * 0.85).toFixed(2)} <span class="text-[10px] text-brand-magenta font-normal">efvo</span></p>
+              <p class="font-black text-brand-cyan text-lg">$${(prod.precio * 0.75).toFixed(2)} <span class="text-[10px] text-brand-magenta font-normal">efvo</span></p>
             </div>
             <button onclick="eliminarDelCarrito(${index})" class="text-gray-500 hover:text-brand-magenta font-bold text-2xl transition-colors" title="Eliminar">×</button>
           </div>
@@ -117,7 +117,7 @@
 
     listaCarrito.innerHTML = html;
     totalListaHTML.innerText = `$${totalLista.toFixed(2)}`;
-    totalEfectivoHTML.innerText = `$${(totalLista * 0.85).toFixed(2)}`;
+    totalEfectivoHTML.innerText = `$${(totalLista * 0.75).toFixed(2)}`;
     btnWhatsApp.style.display = 'flex';
   }
 
@@ -137,7 +137,7 @@
       totalLista += prod.precio;
     });
 
-    let totalEfectivo = totalLista * 0.85;
+    let totalEfectivo = totalLista * 0.75;
 
     mensaje += `\n💳 *Total de Lista (3 cuotas): $${totalLista.toFixed(2)}*\n`;
     mensaje += `💸 *Total Efectivo/Transferencia: $${totalEfectivo.toFixed(2)}*\n\n`;
