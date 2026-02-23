@@ -96,7 +96,11 @@ const productos = await response.json();
                   {prod.categoria}
                 </span>
                 <a href={`/producto/${prod.id}`} class="block w-full h-full">
-                  <img src={prod.imagenUrl || 'https://images.unsplash.com/photo-1606107557195-0e29a4b5b4aa?q=80&w=800&auto=format&fit=crop'} alt={prod.nombre} class="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-500 opacity-90 group-hover:opacity-100" />
+                  <img src={prod.imagenUrl || 'https://images.unsplash.com/photo-1606107557195-0e29a4b5b4aa?q=80&w=800&auto=format&fit=crop'}
+                       loading="lazy"
+                       decoding="async"
+                       alt={prod.nombre}
+                       class="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-500 opacity-90 group-hover:opacity-100" />
                 </a>
               </div>
 
@@ -128,13 +132,21 @@ const productos = await response.json();
         )}
 
       </div>
+
       <div id="mensajeVacio" class="hidden text-center py-20 text-gray-400 text-xl">No encontramos ningún producto con esos filtros. 😢</div>
+
+      <div class="flex justify-center mt-12">
+        <button id="btnCargarMas" class="hidden bg-transparent border-2 border-brand-cyan text-brand-cyan hover:bg-brand-cyan hover:text-brand-dark font-bold py-3 px-8 rounded-full transition-all shadow-brand-cyan">
+          Cargar más botines 👇
+        </button>
+      </div>
+
     </main>
   </body>
 </html>
 
 <script>
-  // Scripts idénticos a los anteriores (menú, filtros y carrito)...
+  // Menú Mobile
   const btnMenu = document.getElementById('btnMenu');
   const menuMobile = document.getElementById('menuMobile');
   if (btnMenu && menuMobile) {
@@ -144,18 +156,25 @@ const productos = await response.json();
     });
   }
 
+  // LÓGICA DE FILTROS Y PAGINACIÓN "VER MÁS"
   const buscador = document.getElementById('buscador');
   const filtroCategoria = document.getElementById('filtroCategoria');
   const filtroTalle = document.getElementById('filtroTalle');
   const tarjetas = document.querySelectorAll('.tarjeta-producto');
   const mensajeVacio = document.getElementById('mensajeVacio');
+  const btnCargarMas = document.getElementById('btnCargarMas');
+
+  const ITEMS_POR_PAGINA = 12; // Muestra de a 12 botines
+  let itemsMostrados = ITEMS_POR_PAGINA;
 
   function aplicarFiltros() {
     const texto = buscador.value.toLowerCase();
     const categoriaSeleccionada = filtroCategoria.value;
     const talleSeleccionado = filtroTalle.value;
-    let productosVisibles = 0;
 
+    let coincidencias = [];
+
+    // Primero evaluamos quiénes cumplen los filtros
     tarjetas.forEach(tarjeta => {
       const nombre = tarjeta.getAttribute('data-nombre') || '';
       const marca = tarjeta.getAttribute('data-marca') || '';
@@ -167,24 +186,60 @@ const productos = await response.json();
       const coincideTalle = talleSeleccionado === 'Todos' || talle === talleSeleccionado;
 
       if (coincideTexto && coincideCategoria && coincideTalle) {
+        coincidencias.push(tarjeta);
+      } else {
+        tarjeta.style.display = 'none'; // Ocultamos los que no coinciden
+      }
+    });
+
+    // Luego mostramos solo hasta el límite de la paginación
+    coincidencias.forEach((tarjeta, index) => {
+      if (index < itemsMostrados) {
         tarjeta.style.display = 'flex';
-        productosVisibles++;
       } else {
         tarjeta.style.display = 'none';
       }
     });
 
-    if (productosVisibles === 0) {
+    // Controlamos el botón "Cargar más" y el mensaje vacío
+    if (coincidencias.length === 0) {
       mensajeVacio.style.display = 'block';
+      if(btnCargarMas) btnCargarMas.style.display = 'none';
     } else {
       mensajeVacio.style.display = 'none';
+      if (btnCargarMas) {
+        if (itemsMostrados < coincidencias.length) {
+          btnCargarMas.style.display = 'inline-block';
+        } else {
+          btnCargarMas.style.display = 'none';
+        }
+      }
     }
   }
 
-  buscador.addEventListener('input', aplicarFiltros);
-  filtroCategoria.addEventListener('change', aplicarFiltros);
-  filtroTalle.addEventListener('change', aplicarFiltros);
+  // Si tocamos el botón, sumamos 12 más a la cuenta
+  if (btnCargarMas) {
+    btnCargarMas.addEventListener('click', () => {
+      itemsMostrados += ITEMS_POR_PAGINA;
+      aplicarFiltros();
+    });
+  }
 
+  // Si el usuario busca o filtra, volvemos a empezar desde 12
+  function resetearPaginacion() {
+    itemsMostrados = ITEMS_POR_PAGINA;
+    aplicarFiltros();
+  }
+
+  buscador.addEventListener('input', resetearPaginacion);
+  filtroCategoria.addEventListener('change', resetearPaginacion);
+  filtroTalle.addEventListener('change', resetearPaginacion);
+
+  // Ejecutamos la primera vez para que solo muestre 12 al entrar
+  aplicarFiltros();
+
+
+  // Contador Carrito
   function actualizarContador() {
     const carrito = JSON.parse(localStorage.getItem('carrito_wembley')) || [];
     const contadores = document.querySelectorAll('.contador-carrito');
@@ -192,6 +247,7 @@ const productos = await response.json();
   }
   actualizarContador();
 
+  // Agregar Rápido
   const botonesAgregar = document.querySelectorAll('.btn-agregar-rapido');
   botonesAgregar.forEach(boton => {
     boton.addEventListener('click', () => {
